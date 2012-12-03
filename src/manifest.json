@@ -1,0 +1,19 @@
+{
+  "name": "Occupy the Top Bar",
+  "description": "This extension helps you to customize your Google search page top bar. Add link of your favourite service to the top bar.",
+  "version": "0.0.4",
+  "content_scripts": [
+    {
+      "matches": ["*://*.google.com/*"],
+      "js": ["content.js"],
+      "run_at":"document_idle"
+    }
+  ],
+  "icons": { "128": "google_128.png", "64": "google_64.png" },
+  "permissions": [
+    "tabs", "*://*.google.com/*"
+  ],
+  "options_page": "options.html",
+  "background": { "scripts": ["background.js"] },
+  "manifest_version": 2
+}

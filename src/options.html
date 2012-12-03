@@ -1,0 +1,58 @@
+<!--
+Copyright (c) 2012 The Chromium Authors. All rights reserved.
+Use of this source code is governed by a BSD-style license that can be
+found in the LICENSE file.
+
+Brian Kennish <bkennish@chromium.org>
+
+An option page for configuring notifications.
+-->
+<!doctype html>
+<html>
+<head>
+<title>Occupy the Top Bar</title>
+<link href="style.css" rel="stylesheet" type="text/css">
+<script src="options.js"></script>
+</head>
+<body>
+<h1>
+<img src="google_64.png" alt="">
+Occupy the Top Bar
+</h1>
+
+<h2>Options</h2>
+<form id="options">
+<table>
+  <tr>
+    <td>Face Text</td>
+    <td> <input type="text" id="facetext"> </td>
+  </tr>
+  <tr>
+    <td>Postion(1-10)</td>
+    <td><input type="number" id="pos" min="0" maxlength="1"><br></td>
+  </tr>
+  <tr>
+    <td>Link URL</td>
+    <td><input type="text" id="linkurl" size="50"> (use %key as the placeholder for keywords of google search)</td>
+  </tr>
+  <tr>
+    <td><button id='savelink'>Submit</button></td>
+  </tr>
+</table>
+</form>
+<h2>Links</h2>
+<table id="link_list" class="hovertable" width="80%">
+  <col style="width:5%">
+  <col style="width:25%">
+  <col style="width:50%">
+  <col style="width:15%">
+  <col style="width:5%">
+  <thead align="center"> <tr><th></th> <th>Face Text</th> <th>Link URL</th>
+  <th>Position</th> <th></th> </tr> </thead>
+  <tbody id="list_body">
+  </tbody>
+</table>
+
+
+</body>
+</html>
