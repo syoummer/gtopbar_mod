@@ -28,7 +28,7 @@ function addLinks() {
   	for(var i=0; i<linkList.length; i++) {
   		if(linkList[i].active) {addLink(linkList[i].facetext, linkList[i].pos, linkList[i].url, key); }
   	}
-});
+});	
 
 }
 
@@ -58,6 +58,8 @@ function addLink(text,pos,url,key) {
   link.setAttribute('target', '_self');
   link.setAttribute('href', request_url);
   link.setAttribute('class', 'gbzt');
+  link.onmouseover=function() {this.className='gbzt gbzt-hvr';};
+  link.onmouseout=function() {this.className='gbzt';};
   link.appendChild(tspaceSpan);
   link.appendChild(linkTextSpan);
   
