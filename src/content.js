@@ -8,7 +8,10 @@ function getKeywords() {
 	} else {
 		return "";
 	}*/
-	return encodeURI(gbqfq.value);
+	if(gbqfq) {return encodeURI(gbqfq.value);}
+	else{
+		return "";
+	}
 }
 
 function make_url(url, key) {
