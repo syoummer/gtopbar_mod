@@ -83,14 +83,21 @@ function addLink(text,pos,url,key) {
   topbar.insertBefore(linkbox, topbar.childNodes[parseInt(pos)-1]);
 }
 
-var linkList;
+var linkList,oq;
+
+
+window.onload = function() {
 chrome.extension.sendRequest({method: "getLocalStorage", key: "linkList"}, function(response) {
   	linkList = JSON.parse(response.data);
+  	oq=gbqfq.value;
   	addLinks();
 });	
-
-gbqfq.addEventListener('change', function() {
-	removeLinks();
-	addLinks();
-});
+setInterval( function() {
+	if(gbqfq.value != oq) {
+		oq = gbqfq.value;
+		removeLinks();
+		addLinks();
+	}
+}, 200);
+};
 //addLink('Scholar',4,"https://scholar.google.com/scholar?hl=en&q=%key",getKeywords());
