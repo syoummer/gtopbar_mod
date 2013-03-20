@@ -85,8 +85,9 @@ function addLink(text,pos,url,key) {
 
 var linkList,oq;
 
+onInit();
 
-window.onload = function() {
+function onInit() {
 chrome.extension.sendRequest({method: "getLocalStorage", key: "linkList"}, function(response) {
   	linkList = JSON.parse(response.data);
   	oq=gbqfq.value;
@@ -100,4 +101,5 @@ setInterval( function() {
 	}
 }, 200);
 };
+
 //addLink('Scholar',4,"https://scholar.google.com/scholar?hl=en&q=%key",getKeywords());
