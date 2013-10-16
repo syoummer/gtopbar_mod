@@ -51,7 +51,7 @@ function removeLinks() {
 
 function addLink(text,pos,url,key) {
   var topbar=document.getElementById('gbzc');  
-  if (topbar == null) return;  
+  if (topbar == null) return addLinkNew(text,pos,url,key);  
   // 
   var request_url = make_url(url, key);
   
@@ -83,7 +83,65 @@ function addLink(text,pos,url,key) {
   topbar.insertBefore(linkbox, topbar.childNodes[parseInt(pos)-1]);
 }
 
-var linkList,oq;
+function addLinkNew(text,pos,url,key) {
+  if (pos > 6) {
+    addLinkMore(text,pos,url,key);
+  } else {
+      var btnlist=document.getElementById('hdtb_msb');  
+      if (btnlist == null) return;
+      if (document.getElementById('menu'+pos) != null) return;
+      // 
+      var request_url = make_url(url, key);
+  
+      // generate scholar link
+  
+      var linkbox=document.getElementById('hdtb_msb').childNodes[1].cloneNode(true);
+      var link = document.evaluate("//a[@class='q qs']", linkbox, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+      if (link == null) {
+        return;
+      }
+      else 
+        link = link.singleNodeValue;
+
+      link.href = request_url;
+      link.textContent = text;
+      linkbox.id="menu"+pos
+      linkbox.className="hdtb_mitem"
+      
+      //TOTO:move the last button to 
+      var lastind = 4
+      var lastitem = document.getElementById('hdtb_msb').childNodes[lastind]
+      
+      btnlist.removeChild(lastitem)
+      //lastitem.className=""
+      btnlist.insertBefore(linkbox, btnlist.childNodes[parseInt(pos)-1]);
+  }
+} 
+
+function addLinkMore(text,pos,url,key) {
+  var morebtn=document.getElementById('hdtb_more_mn');  
+  if (morebtn == null) return;  
+  if (document.getElementById('menu'+pos) != null) return;
+  // 
+  var request_url = make_url(url, key);
+  
+  // generate scholar link
+  
+  var linkbox=document.getElementById('hdtb_more_mn').firstChild.cloneNode(true);
+  var link = document.evaluate("//a[@class='q qs']", linkbox, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+  if (link == null) {
+    return;
+  }
+  else 
+    link = link.singleNodeValue;
+
+  link.href = request_url;
+  link.textContent = text;
+  linkbox.id="menu"+pos
+
+  morebtn.insertBefore(linkbox, morebtn.childNodes[parseInt(pos)-6]);
+}
+var linkList,oq,timeout;
 
 onInit();
 
@@ -93,13 +151,12 @@ chrome.extension.sendRequest({method: "getLocalStorage", key: "linkList"}, funct
   	oq=gbqfq.value;
   	addLinks();
 });	
-setInterval( function() {
-	if(gbqfq.value != oq) {
-		oq = gbqfq.value;
-		removeLinks();
-		addLinks();
-	}
-}, 200);
+document.addEventListener("DOMSubtreeModified", function() {
+    if(timeout) {
+        clearTimeout(timeout);
+    }
+    timeout = setTimeout(addLinks, 500);
+}, false);
 };
 
 //addLink('Scholar',4,"https://scholar.google.com/scholar?hl=en&q=%key",getKeywords());
