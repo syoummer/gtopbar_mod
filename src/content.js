@@ -1,3 +1,5 @@
+var linkList,lastButton,timeout=null;
+
 function getKeywords() {
 	/*
 	var n=document.URL.match(/www\.google\.com\/search\?(.*)#(.*)/);
@@ -8,10 +10,21 @@ function getKeywords() {
 	} else {
 		return "";
 	}*/
-	if(gbqfq) {return encodeURI(gbqfq.value);}
+	if(document.getElementById('lst-ib')) {return encodeURI(document.getElementById('lst-ib').value)}
+	else if(document.getElementById('gbqfq')) {return encodeURI(gbqfq.value);}
 	else{
 		return "";
 	}
+}
+
+function getNumOfButton() {
+    if (hdtb_more) {
+        i=0;
+        cur = hdtb_more;
+        while ((cur = cur.previousSibling) != null) i++;
+        return i;
+    } else 
+        return -1;
 }
 
 function make_url(url, key) {
@@ -27,13 +40,12 @@ function compare(a,b) {
 }
 
 
-  	
 
 function addLinks() {	
   	linkList.sort(compare);
   	var key = getKeywords();
   	for(var i=0; i<linkList.length; i++) {
-  		if(linkList[i].active) {addLink(linkList[i].facetext, linkList[i].pos, linkList[i].url, key); }
+  		if(linkList[i].active && (document.getElementById('clinkpos'+linkList[i].pos) == null)) {addLink(linkList[i].facetext, linkList[i].pos, linkList[i].url, key); }
   	}
 }
 
@@ -84,12 +96,12 @@ function addLink(text,pos,url,key) {
 }
 
 function addLinkNew(text,pos,url,key) {
-  if (pos > 6) {
+  if (pos > getNumOfButton()) {
     addLinkMore(text,pos,url,key);
   } else {
       var btnlist=document.getElementById('hdtb_msb');  
       if (btnlist == null) return;
-      if (document.getElementById('menu'+pos) != null) return;
+      if (document.getElementById('clinkpos'+pos) != null) return;
       // 
       var request_url = make_url(url, key);
   
@@ -105,23 +117,24 @@ function addLinkNew(text,pos,url,key) {
 
       link.href = request_url;
       link.textContent = text;
-      linkbox.id="menu"+pos
-      linkbox.className="hdtb_mitem"
+      linkbox.id="clinkpos"+pos;
+      linkbox.className="hdtb_mitem";
       
       //TOTO:move the last button to 
-      var lastind = 4
-      var lastitem = document.getElementById('hdtb_msb').childNodes[lastind]
+      var lastind = getNumOfButton()-1;
+      var lastitem = document.getElementById('hdtb_msb').childNodes[lastind];
       
-      btnlist.removeChild(lastitem)
-      //lastitem.className=""
+      btnlist.removeChild(lastitem);
+      document.getElementById("hdtb_more_mn").insertBefore(lastitem, document.getElementById("hdtb_more_mn").childNodes[0]);
       btnlist.insertBefore(linkbox, btnlist.childNodes[parseInt(pos)-1]);
+
   }
-} 
+}
 
 function addLinkMore(text,pos,url,key) {
   var morebtn=document.getElementById('hdtb_more_mn');  
   if (morebtn == null) return;  
-  if (document.getElementById('menu'+pos) != null) return;
+  if (document.getElementById('clinkpos'+pos) != null) return;
   // 
   var request_url = make_url(url, key);
   
@@ -137,19 +150,16 @@ function addLinkMore(text,pos,url,key) {
 
   link.href = request_url;
   link.textContent = text;
-  linkbox.id="menu"+pos
+  linkbox.id="clinkpos"+pos;
 
-  morebtn.insertBefore(linkbox, morebtn.childNodes[parseInt(pos)-6]);
+  morebtn.insertBefore(linkbox, morebtn.childNodes[parseInt(pos)-getNumOfButton()]);
 }
-var linkList,oq,timeout;
-
-onInit();
 
 function onInit() {
 chrome.extension.sendRequest({method: "getLocalStorage", key: "linkList"}, function(response) {
   	linkList = JSON.parse(response.data);
-  	oq=gbqfq.value;
-  	addLinks();
+  	//oq=gbqfq.value;
+  	//addLinks();
 });	
 document.addEventListener("DOMSubtreeModified", function() {
     if(timeout) {
@@ -159,4 +169,5 @@ document.addEventListener("DOMSubtreeModified", function() {
 }, false);
 };
 
+onInit();
 //addLink('Scholar',4,"https://scholar.google.com/scholar?hl=en&q=%key",getKeywords());
