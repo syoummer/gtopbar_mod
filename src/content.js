@@ -1,4 +1,4 @@
-var linkList,lastButton,timeout=null;
+var linkList,numButton,timeout=null;
 
 function getKeywords() {
 	/*
@@ -19,12 +19,24 @@ function getKeywords() {
 
 function getNumOfButton() {
     if (hdtb_more) {
-        i=0;
-        cur = hdtb_more;
-        while ((cur = cur.previousSibling) != null) i++;
-        return i;
+        var i=0;
+        var last = hdtb_more.previousSibling;
+        while((' ' + last.className + ' ').indexOf(" hdtb_mitem ") == -1) last=last.previousSibling;
+        var items = document.getElementsByClassName("hdtb_mitem");
+        while (!(items[i] === last)) i++;
+        return i+1;
     } else 
         return -1;
+}
+
+function getLastButton() {
+    if (hdtb_more) {
+          var i=0;
+          var last = hdtb_more.previousSibling;
+          while(last.className != "hdtb_mitem") last=last.previousSibling;
+          return last;
+      } else
+          return null;
 }
 
 function make_url(url, key) {
@@ -44,6 +56,7 @@ function compare(a,b) {
 function addLinks() {	
   	linkList.sort(compare);
   	var key = getKeywords();
+    numButton = getNumOfButton();
   	for(var i=0; i<linkList.length; i++) {
   		if(linkList[i].active && (document.getElementById('clinkpos'+linkList[i].pos) == null)) {addLink(linkList[i].facetext, linkList[i].pos, linkList[i].url, key); }
   	}
@@ -96,7 +109,7 @@ function addLink(text,pos,url,key) {
 }
 
 function addLinkNew(text,pos,url,key) {
-  if (pos > getNumOfButton()) {
+  if (pos > numButton) {
     addLinkMore(text,pos,url,key);
   } else {
       var btnlist=document.getElementById('hdtb_msb');  
@@ -120,13 +133,13 @@ function addLinkNew(text,pos,url,key) {
       linkbox.id="clinkpos"+pos;
       linkbox.className="hdtb_mitem";
       
-      //TOTO:move the last button to 
-      var lastind = getNumOfButton()-1;
-      var lastitem = document.getElementById('hdtb_msb').childNodes[lastind];
-      
-      btnlist.removeChild(lastitem);
-      document.getElementById("hdtb_more_mn").insertBefore(lastitem, document.getElementById("hdtb_more_mn").childNodes[0]);
       btnlist.insertBefore(linkbox, btnlist.childNodes[parseInt(pos)-1]);
+      //move the last button to list of more buttons
+      var lastitem = getLastButton(); //document.getElementById('hdtb_msb').childNodes[lastind];
+      
+      //btnlist.removeChild(lastitem);
+      document.getElementById("hdtb_more_mn").insertBefore(lastitem, document.getElementById("hdtb_more_mn").childNodes[0]);
+      
 
   }
 }
@@ -152,7 +165,7 @@ function addLinkMore(text,pos,url,key) {
   link.textContent = text;
   linkbox.id="clinkpos"+pos;
 
-  morebtn.insertBefore(linkbox, morebtn.childNodes[parseInt(pos)-getNumOfButton()]);
+  morebtn.insertBefore(linkbox, morebtn.childNodes[parseInt(pos)-numButton-1]);
 }
 
 function onInit() {
