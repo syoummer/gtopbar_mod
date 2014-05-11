@@ -14,6 +14,7 @@ if (!localStorage.isInitialized) {
   linkList = new Array();        
   linkList[0] = {facetext:"Scholar", pos:5, url:"https://scholar.google.com/scholar?hl=en&q=%key", active:true};
   linkList[1] = {facetext:"Baidu", pos:6,  url:"http://www.baidu.com/s?wd=%key", active:false};
+  linkList[2] = {facetext:"BaiduYun", pos:7,  url:"http://www.google.com/search?q=%key+site%3Apan.baidu.com", active:false};
   localStorage['linkList'] = JSON.stringify(linkList);
   localStorage.isInitialized = true; // The option initialization.
   console.log('localStorage initialized');

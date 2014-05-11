@@ -18,7 +18,7 @@ function createLinkRow(facetext,url,pos,active) {
 	for(var j=1; j<=10; j++) {
 		var opt = document.createElement('option');
 		opt.setAttribute('value', j);
-		if(j==pos) opt.setAttribute('selected');
+		if(j==pos) opt.setAttribute('selected', 'selected');
 		opt.appendChild(document.createTextNode(j));
 		psel.appendChild(opt);
 	}
