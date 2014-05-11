@@ -77,7 +77,9 @@ function addLink(cfacetext, cpos, curl) {
 }
 
 function saveLink() {
-	addLink(facetext.value, pos.value, linkurl.value);
+	if (pos.value) {
+		addLink(facetext.value, pos.value, linkurl.value);
+	}
 }
 
 function removeLink(id) {
